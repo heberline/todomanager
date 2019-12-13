@@ -1,0 +1,9 @@
+version: 0.0
+os: linux
+files:
+	- source: /
+		destination: /home/ubuntu/ToDoManager
+hooks:
+	ApplicationStart:
+		- location: start.sh
+			timeout: 300
