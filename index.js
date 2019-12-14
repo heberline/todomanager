@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const uuid = require('uuid');
+let idCont=0;
 const jwt = require('jsonwebtoken');
 const SEGREDO = 'euvoupracasa';
 
@@ -31,11 +31,12 @@ app.get('/', (req, resp) => {
 var tasks = [];
 
 app.post('/tasks', (request, response) => {
-    const body = request.body;
+    const { body } = request;
+    idCont++;
     const task = {
-        id: uuid(),
+        id: idCont,
         title: body.title,
-        description: body.description,
+        resume: body.resume,
         isDone: body.isDone,
         isPriority: body.isPriority
     };
@@ -64,7 +65,7 @@ app.put('/tasks/:taskId', (request, response) => {
     const task = tasks.find(t => t.id == request.params.taskId);
     if (task) {
         task.title = body.title;
-        task.description = body.description;
+        task.resume = body.resume;
         task.isDone = body.isDone;
         task.isPriority = body.isPriority;
         response.send(task);
@@ -86,13 +87,13 @@ app.delete('/tasks/:taskId', (request, response) => {
 
 app.post('/login', (req, resp) => {
     var body = req.body;
-    if (body.username == 'usuario' && body.password == 'teste123') {
+    if (body.username == 'usuario' && body.password == '123456') {
         var token = jwt.sign({ username: 'usuario', role: 'admin' }, SEGREDO, {
             expiresIn: '1h'
         });
         resp.send({ auth: true, token });
     } else {
-        resp.status(403).send({ auth: false, message: 'usuario invalido' });
+        resp.status(403).send({ auth: false, message: 'Error in username or password' });
     }
 })
 app.listen(3000);
